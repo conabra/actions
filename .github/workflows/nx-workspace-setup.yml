@@ -15,6 +15,10 @@ on:
       working-directory:
         required: false
         type: string
+    outputs:
+      affected:
+        description: "List of the affected projects"
+        value: ${{ jobs.workspace.outputs.affected }}
         
 concurrency:
   group: ci-${{ github.ref }}-1
@@ -98,4 +102,4 @@ jobs:
             const { execSync } = require('child_process');
             const affected = execSync(`npx nx print-affected`).toString('utf-8');
             const projects = JSON.parse(affected).projects.sort();
-            console.log(`::set-output name=projects::${JSON.stringify(projects)}`);
+            console.log(`::set-output name=affected::${JSON.stringify(projects)}`);
