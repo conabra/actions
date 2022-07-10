@@ -34,7 +34,7 @@ jobs:
         # Specify shell to help normalize across different operating systems
         shell: bash
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.affected }}
+      affected: ${{ steps.set-matrix.outputs.affected }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
