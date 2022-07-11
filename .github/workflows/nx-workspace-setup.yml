@@ -9,9 +9,16 @@ on:
       registry-scope:
         required: false
         type: string
+      registry-token:
+        required: false
+        type: string
       setup-commands:
         required: false
         type: string
+      node-version:
+        required: false
+        type: string
+        default: 16.x
       runs-on:
         required: false
         type: string
@@ -100,6 +107,8 @@ jobs:
         run: |
           echo "Running yarn install --frozen-lockfile"
           yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ inputs.registry-token }}
 
       - id: set-matrix
         uses: actions/github-script@v6
