@@ -89,19 +89,13 @@ jobs:
           scope: ${{ inputs.registry-scope }}
           node-version: ${{ inputs.node-version }}
 
-      - name: Print Node, NPM and Yarn versions
-        run: |
-          echo "Node: ${{ steps.setup-node.outputs.node-version }}"
-          echo "NPM: $( npm --version )"
-          echo "Yarn: $( yarn --version )"
-
       - name: Use the node_modules cache if available
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ inputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-yarn-   
+            ${{ runner.os }}-node-${{ inputs.node-version }}-yarn-   
 
       - name: Install dependencies
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
