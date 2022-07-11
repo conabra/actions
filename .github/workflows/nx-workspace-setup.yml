@@ -18,7 +18,7 @@ on:
       node-version:
         required: false
         type: string
-        default: 16.x
+        default: 16
       runs-on:
         required: false
         type: string
@@ -82,15 +82,16 @@ jobs:
 
       # Set node/npm/yarn versions using setup-node, with optional overrides provided by the consumer
       - name: Set node/npm/yarn versions
+        id: setup-node
         uses: actions/setup-node@v3
-        id: versions
         with:
           registry-url: ${{ inputs.registry-url }}
           scope: ${{ inputs.registry-scope }}
+          node-version: ${{ inputs.node-version }}
 
       - name: Print Node, NPM and Yarn versions
         run: |
-          echo "Node: ${{ steps.versions.outputs.node-version }}"
+          echo "Node: ${{ steps.setup-node.outputs.node-version }}"
           echo "NPM: $( npm --version )"
           echo "Yarn: $( yarn --version )"
 
@@ -98,9 +99,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ steps.versions.outputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ steps.versions.outputs.node-version }}-yarn-   
+            ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-yarn-   
 
       - name: Install dependencies
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
