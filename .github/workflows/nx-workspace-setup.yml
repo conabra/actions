@@ -3,6 +3,12 @@ name: CI
 on:
   workflow_call:
     inputs:
+      registry-url:
+        required: false
+        type: string
+      registry-scope:
+        required: false
+        type: string
       setup-commands:
         required: false
         type: string
@@ -67,27 +73,27 @@ jobs:
         with:
           main-branch-name: main
 
-      # Set node/npm/yarn versions using volta, with optional overrides provided by the consumer
+      # Set node/npm/yarn versions using setup-node, with optional overrides provided by the consumer
       - name: Set node/npm/yarn versions
-        uses: volta-cli/action@fdf4cf319494429a105efaa71d0e5ec67f338c6e
+        uses: actions/setup-node@v3
+        id: versions
+        with:
+          registry-url: ${{ inputs.registry-url }}
+          scope: ${{ inputs.registry-scope }}
 
       - name: Print Node, NPM and Yarn versions
-        id: versions
         run: |
-          node_ver=$( node --version )
-          yarn_ver=$( yarn --version || true )
-          echo "Node: ${node_ver:1}"
+          echo "Node: ${{ steps.versions.outputs.node-version }}"
           echo "NPM: $( npm --version )"
           echo "Yarn: $( yarn --version )"
-          echo "::set-output name=node_version::${node_ver:1}"
 
       - name: Use the node_modules cache if available
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ steps.versions.outputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-yarn-   
+            ${{ runner.os }}-node-${{ steps.versions.outputs.node-version }}-yarn-   
 
       - name: Install dependencies
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
