@@ -15,6 +15,12 @@ on:
       setup-commands:
         required: false
         type: string
+      affected-command:
+        required: true
+        type: string
+      final-commands:
+        required: true
+        type: string
       node-version:
         required: false
         type: string
@@ -70,7 +76,7 @@ jobs:
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
 
-      - name: Run any configured setup-commands
+      - name: Run any configured setup-commands sequentially
         if: ${{ inputs.setup-commands != '' }}
         run: |
           ${{ inputs.setup-commands }}
@@ -110,6 +116,11 @@ jobs:
         with:
           script: |
             const { execSync } = require('child_process');
-            const affected = execSync(`npx nx print-affected`).toString('utf-8');
+            const affected = execSync(`${{ affected-command }}`).toString('utf-8');
             const projects = JSON.parse(affected).projects.sort();
             console.log(`::set-output name=affected::${JSON.stringify(projects)}`);
+            
+      - name: Run any configured final-commands sequentially
+        if: ${{ inputs.final-commands != '' }}
+        run: |
+          ${{ inputs.final-commands }}
