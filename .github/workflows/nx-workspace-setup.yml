@@ -9,9 +9,6 @@ on:
       registry-scope:
         required: false
         type: string
-      registry-token:
-        required: false
-        type: string
       setup-commands:
         required: false
         type: string
@@ -37,6 +34,9 @@ on:
       working-directory:
         required: false
         type: string
+    secrets:
+      registry-token:
+        required: false
     outputs:
       affected:
         description: "List of the affected projects"
@@ -112,7 +112,7 @@ jobs:
           echo "Running yarn install --frozen-lockfile"
           yarn install --frozen-lockfile
         env:
-          NODE_AUTH_TOKEN: ${{ inputs.registry-token }}
+          NODE_AUTH_TOKEN: ${{ secrets.registry-token }}
 
       - id: set-matrix
         uses: actions/github-script@v6
