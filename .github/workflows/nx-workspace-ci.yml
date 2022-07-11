@@ -3,6 +3,9 @@ name: CI
 on:
   workflow_call:
     inputs:
+      target-matrix: 
+        required: true
+        type: string
       target-command:
         required: true
         type: string
