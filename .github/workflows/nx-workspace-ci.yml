@@ -1,5 +1,3 @@
-name: CI
-
 on:
   workflow_call:
     inputs:
@@ -41,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-        project: ${{ fromJSON(inputs.project) }}
+        project: ${{ fromJSON(inputs.target-matrix) }}
     defaults:
       run:
         working-directory: ${{ inputs.working-directory || github.workspace }}
