@@ -41,10 +41,6 @@ on:
       affected:
         description: "List of the affected projects"
         value: ${{ jobs.workspace.outputs.affected }}
-        
-concurrency:
-  group: ci-${{ github.ref }}-1
-  cancel-in-progress: true
 
 jobs:
   workspace:
