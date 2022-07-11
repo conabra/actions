@@ -116,7 +116,7 @@ jobs:
           script: |
             const { execSync } = require('child_process');
 
-            const toArray = (str) => str.toString('utf-8').split(',').map(s => s.trim())
+            const toArray = (str) => str.toString('utf-8').split(',').map(s => s.trim()).filter(s => s.length)
 
             const targets = toArray('${{ inputs.affected-targets }}')
             const projects = targets.reduce((res, key) =>
