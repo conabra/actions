@@ -15,7 +15,7 @@ on:
       setup-commands:
         required: false
         type: string
-      affected-target:
+      affected-targets:
         required: true
         type: string
       affected-command:
