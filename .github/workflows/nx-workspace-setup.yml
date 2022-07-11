@@ -116,7 +116,7 @@ jobs:
         with:
           script: |
             const { execSync } = require('child_process');
-            const affected = execSync(`${{ affected-command }}`).toString('utf-8');
+            const affected = execSync(`${{ inputs.affected-command }}`).toString('utf-8');
             const projects = JSON.parse(affected).projects.sort();
             console.log(`::set-output name=affected::${JSON.stringify(projects)}`);
             
