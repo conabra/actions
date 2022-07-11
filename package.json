@@ -1,5 +1,5 @@
 {
   "private": true,
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "This package.json is here purely to control the version of the Action"
 }
