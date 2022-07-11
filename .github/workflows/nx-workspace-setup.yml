@@ -15,6 +15,9 @@ on:
       setup-commands:
         required: false
         type: string
+      affected-target:
+        required: true
+        type: string
       affected-command:
         required: true
         type: string
@@ -116,8 +119,12 @@ jobs:
         with:
           script: |
             const { execSync } = require('child_process');
-            const affected = execSync(`${{ inputs.affected-command }}`).toString('utf-8');
-            const projects = JSON.parse(affected).projects.sort();
+            
+            const toArray = (str) => str.toString('utf-8').split(',').map(s => s.trim())
+
+            const targets = toArray('${{ inputs.affected-targets }}')
+            const projects = targets.reduce((res, key) => Object.assign(res, { [key]: Object.assign(res, { [key]: toArray(execSync(`nx --target=${key}`)).sort() }) }), {})
+
             console.log(`::set-output name=affected::${JSON.stringify(projects)}`);
             
       - name: Run any configured final-commands sequentially
