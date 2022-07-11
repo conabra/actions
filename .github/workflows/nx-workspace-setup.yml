@@ -119,16 +119,16 @@ jobs:
         with:
           script: |
             const { execSync } = require('child_process');
-            
+
             const toArray = (str) => str.toString('utf-8').split(',').map(s => s.trim())
 
             const targets = toArray('${{ inputs.affected-targets }}')
-            const projects = targets.reduce((res, key) => 
-              Object.assign(res, { [key]: Object.assign(res, { [key]: toArray(execSync(`${{ inputs.affected-command }} --target=${key}`)).sort() }) }),{}
+            const projects = targets.reduce((res, key) =>
+              Object.assign(res, { [key]: toArray(execSync(`${{ inputs.affected-command }} --target=${key}`)).sort() }), {}
             )
 
             console.log(`::set-output name=affected::${JSON.stringify(projects)}`);
-            
+
       - name: Run any configured final-commands sequentially
         if: ${{ inputs.final-commands != '' }}
         run: |
